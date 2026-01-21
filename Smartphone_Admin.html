@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<title>Admin – Clicker Benfica</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@font-face{
+  font-family:"SoleRepsolDisplay";
+  src:url("./fonts/SoleRepsolDisplay_XBd.ttf") format("truetype");
+  font-weight:800;
+}
+@font-face{
+  font-family:"SoleRepsolText";
+  src:url("./fonts/SoleRepsolText_Rg.ttf") format("truetype");
+  font-weight:400;
+}
+
+:root{ --azul:#001e37; }
+
+html,body{
+  margin:0;
+  height:100%;
+  font-family:SoleRepsolText, sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#ff590a,#ff2e2e,#ff7a18);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.card{
+  background:#fff;
+  border-radius:28px;
+  padding:32px;
+  width:100%;
+  max-width:360px;
+  box-sizing:border-box;
+  text-align:center;
+}
+
+h1{
+  font-family:SoleRepsolDisplay;
+  font-size:28px;
+  color:var(--azul);
+  margin-bottom:24px;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  margin:10px 0;
+  font-size:18px;
+  border-radius:14px;
+  border:none;
+  background:var(--azul);
+  color:#fff;
+  cursor:pointer;
+}
+
+button.secondary{
+  background:#555;
+}
+
+button.danger{
+  background:#b00020;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Controlo do Jogo</h1>
+
+  <button id="start">▶ Iniciar partida</button>
+  <button id="finish">⏹ Finalizar partida</button>
+  <button id="reset" class="danger">⟳ Reset total</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+/* FIREBASE */
+const app = initializeApp({
+  apiKey: "AIzaSyDfAAtvEWrCyI5NyaRuOZ4Lx9EPULufNqY",
+  authDomain: "clicker-benfica.firebaseapp.com",
+  projectId: "clicker-benfica"
+});
+const db = getFirestore(app);
+
+const estadoRef = doc(db,"estado_partida","actual");
+const scoresRef = doc(db,"scores","actual");
+
+/* BOTÕES */
+start.onclick = () =>
+  updateDoc(estadoRef,{activa:true,finalizada:false});
+
+finish.onclick = () =>
+  updateDoc(estadoRef,{finalizada:true});
+
+reset.onclick = async () => {
+  await setDoc(scoresRef,{A:0,B:0,C:0,D:0});
+  await updateDoc(estadoRef,{activa:false,finalizada:false});
+};
+</script>
+
+</body>
+</html>
